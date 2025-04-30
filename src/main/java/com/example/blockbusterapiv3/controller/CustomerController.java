@@ -32,6 +32,16 @@ public class CustomerController {
         return customer.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<Customer> updateCustomerDetails(@PathVariable Long id, @RequestBody Customer customerDetails){
+        try {
+            Customer updated = customerService.updateCustomer(id, customerDetails);
+            return ResponseEntity.ok(updated);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     @GetMapping
     public List<Customer> getAllCustomers() {
         return customerService.getAllCustomers();
@@ -40,6 +50,7 @@ public class CustomerController {
     @GetMapping("/search")
     public ResponseEntity<?> searchCustomer(
             @RequestParam(required = false) String email,
+            @RequestParam(required = false) String city,
             @RequestParam(required = false) String name) {
         if (email != null) {
             Optional<Customer> customer = customerService.getCustomerByEmail(email);
@@ -48,6 +59,8 @@ public class CustomerController {
         } else if (name != null) {
             List<Customer> customers = customerService.getCustomersByName(name);
             return ResponseEntity.ok(customers);
+        } else if (city != null) {
+            return ResponseEntity.ok(customerService.getCustomersByCity(city));
         } else {
             return ResponseEntity.badRequest().build();
         }
@@ -70,5 +83,10 @@ public class CustomerController {
     public ResponseEntity<Void> deleteCustomer(@PathVariable Long id) {
         customerService.deleteCustomer(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/count/city")
+    public ResponseEntity<List<Object[]>> getCustomerCountsPerCity(){
+        return ResponseEntity.ok(customerService.getCustomerCountPerCity());
     }
 }

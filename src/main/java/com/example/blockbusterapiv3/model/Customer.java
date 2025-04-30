@@ -1,5 +1,6 @@
 package com.example.blockbusterapiv3.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -33,6 +34,11 @@ public class Customer {
 
     @NotNull
     private LocalDate registrationDate;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "address_id")
+    @JsonManagedReference
+    private Address address;
 
    public Customer(String firstName, String lastName, String email) {
         this.firstName = firstName;

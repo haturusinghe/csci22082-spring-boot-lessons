@@ -22,16 +22,27 @@ public class CustomerService {
         return customerRepository.save(customer);
     }
 
-    public List<Customer> saveAllCustomers(List<Customer> customers) {
-        return customerRepository.saveAll(customers);
+    public void saveAllCustomers(List<Customer> customers) {
+        customerRepository.saveAll(customers);
     }
 
     public Customer updateCustomer(Long id, Customer customer) {
-        if (!customerRepository.existsById(id)) {
+        Optional<Customer> existingOpt = customerRepository.findById(id);
+        if (existingOpt.isEmpty()) {
             throw new IllegalArgumentException("Customer with ID " + id + " does not exist.");
         }
-        customer.setId(id);
-        return customerRepository.save(customer);
+        Customer existing = existingOpt.get();
+        // Only update allowed fields
+        existing.setFirstName(customer.getFirstName());
+        existing.setLastName(customer.getLastName());
+        existing.setEmail(customer.getEmail());
+        if (customer.getRegistrationDate() != null) {
+            existing.setRegistrationDate(customer.getRegistrationDate());
+        }
+        if (customer.getAddress() != null) {
+            existing.setAddress(customer.getAddress());
+        }
+        return customerRepository.save(existing);
     }
 
     public Optional<Customer> getCustomerById(Long id) {
@@ -60,5 +71,13 @@ public class CustomerService {
 
     public void deleteCustomer(Long id) {
         customerRepository.deleteById(id);
+    }
+
+    public List<Customer> getCustomersByCity(String city){
+        return customerRepository.findByAddress_CityIgnoreCase(city);
+    }
+
+    public List<Object[]> getCustomerCountPerCity(){
+        return customerRepository.CustomerCountPerCity();
     }
 }

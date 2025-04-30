@@ -1,5 +1,6 @@
 package com.example.blockbusterapiv3.utility;/* Dataloader class to populate the database with initial movie data. This class will be responsible for loading predefined movie records into the database upon application startup. */
 
+import com.example.blockbusterapiv3.model.Address;
 import com.example.blockbusterapiv3.model.Customer;
 import com.example.blockbusterapiv3.model.Movie;
 import com.example.blockbusterapiv3.model.MovieGenre;
@@ -52,18 +53,22 @@ public class DataLoader{
 
             Customer john = new Customer("John", "Doe", "john.doe@example.com");
             john.setRegistrationDate(LocalDate.of(2021, 1, 15));
+            john.setAddress(new Address("Colombo", "12345"));
             customers.add(john);
 
             Customer jane = new Customer("Jane", "Smith", "jane.smith@example.com");
             jane.setRegistrationDate(LocalDate.of(2020, 5, 20));
+            jane.setAddress(new Address("Kandy", "54321"));
             customers.add(jane);
 
             Customer alice = new Customer("Alice", "Johnson", "alice.johnson@example.com");
             alice.setRegistrationDate(LocalDate.of(2019, 3, 10));
+            alice.setAddress(new Address("Galle", "67890"));
             customers.add(alice);
 
             Customer bob = new Customer("Bob", "Brown", "bob.brown@example.com");
             bob.setRegistrationDate(LocalDate.of(2022, 7, 25));
+            bob.setAddress(new Address("Colombo", "12345"));
             customers.add(bob);
 
             customerService.saveAllCustomers(customers);
